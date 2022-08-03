@@ -1,0 +1,164 @@
+<div style="box-sizing:border-box;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;margin: 0px; padding: 0px;">
+    <p style="box-sizing:border-box;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;margin: 0px; padding: 0px; font-size: 12px;">
+        Hola,
+        <br style="box-sizing:border-box;"><br style="box-sizing:border-box;">
+        <t t-set="transaction" t-value="object.get_portal_last_transaction()" data-oe-t-inline="true" style="box-sizing:border-box;"></t>Tu Orden&nbsp;<strong t-out="object.name or ''" style="box-sizing:border-box;font-weight:bolder;" contenteditable="false">S00049</strong>&nbsp;con el monto&nbsp;<strong t-out="format_amount(object.amount_total, object.currency_id) or ''" style="box-sizing:border-box;font-weight:bolder;" contenteditable="false">$ 10.00</strong>
+        <t t-if="object.state == 'sale' or (transaction and transaction.state in ('done', 'authorized'))" data-oe-t-group-active="true" style="box-sizing:border-box;" data-oe-t-group="0" data-oe-t-selectable="true" data-oe-t-inline="true">
+            ha sido confirmada y esta en proceso.<br style="box-sizing:border-box;">
+            Gracias por confiar en nosotros!</t><t t-elif="transaction and transaction.state == 'pending'" style="box-sizing:border-box;" data-oe-t-selectable="true" data-oe-t-group="0" data-oe-t-inline="true">
+            Esta pendiente. sera confirmada cuando se reciba el pago.
+            <t t-if="object.reference" data-oe-t-group-active="true" style="box-sizing:border-box;" data-oe-t-group="1" data-oe-t-inline="true">
+                Tu codigo de referencia de pago es <strong t-out="object.reference or ''" style="box-sizing:border-box;font-weight:bolder;" contenteditable="false"></strong>.
+            </t>
+        </t><br style="box-sizing:border-box;"><br style="box-sizing:border-box;">
+        Si tienes alguna pregunta o sugerencia no dudes en contactarnos.&nbsp;<br style="box-sizing:border-box;"><br style="box-sizing:border-box;">
+    </p>
+<t t-if="hasattr(object, 'website_id') and object.website_id" data-oe-t-group-active="true" style="box-sizing:border-box;" data-oe-t-group="2">
+    <div style="box-sizing:border-box;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;margin: 0px; padding: 0px;">
+        <table width="100%" style="box-sizing:border-box;color: #454748; font-size: 12px; border-collapse: collapse;">
+            <tbody style="box-sizing:border-box;"><tr style="border-style:none none solid none;box-sizing:border-box;border-bottom-color:#dee2e6;border-bottom-width:2px;border-bottom: 2px solid #dee2e6;">
+                <td style="box-sizing:border-box;width: 150px;" width="150px"><strong style="box-sizing:border-box;font-weight:bolder;">Productos</strong></td>
+                <td style="box-sizing:border-box;">&nbsp;</td>
+                <td width="15%" align="center" style="box-sizing:border-box;"><strong style="box-sizing:border-box;font-weight:bolder;"></strong>Cantidad</td>
+                <td width="20%" align="right" style="box-sizing:border-box;"><strong style="box-sizing:border-box;font-weight:bolder;"><t t-if="object.user_id.has_group('account.group_show_line_subtotals_tax_excluded')" data-oe-t-group-active="true" style="box-sizing:border-box;" data-oe-t-group="3" data-oe-t-selectable="true" data-oe-t-inline="true">Monto.
+                </t>
+                <t t-else="" style="box-sizing:border-box;" data-oe-t-selectable="true" data-oe-t-group="3" data-oe-t-inline="true">
+                    Impuesto Incluido
+                </t>
+                </strong></td>
+            </tr>
+        </tbody></table>
+        <t t-foreach="object.order_line" t-as="line" style="box-sizing:border-box;">
+            <t t-if="(not hasattr(line, 'is_delivery') or not line.is_delivery) and line.display_type in ['line_section', 'line_note']" data-oe-t-group-active="true" style="box-sizing:border-box;" data-oe-t-group="4" data-oe-t-selectable="true">
+                <t t-set="loop_cycle_number" t-value="0" data-oe-t-inline="true" style="box-sizing:border-box;"></t><t t-set="loop_cycle_number" t-value="loop_cycle_number + 1" data-oe-t-inline="true" style="box-sizing:border-box;"></t><table width="100%" style="box-sizing:border-box;color: #454748; font-size: 12px; border-collapse: collapse;">
+                    
+                    <tbody style="box-sizing:border-box;"><tr t-att-style="'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'" style="box-sizing:border-box;">
+                        
+                        <td colspan="4" style="box-sizing:border-box;">
+                            <t t-if="line.display_type == 'line_section'" data-oe-t-group-active="true" style="box-sizing:border-box;" data-oe-t-group="5" data-oe-t-selectable="true" data-oe-t-inline="true">
+                                <strong t-out="line.name or ''" style="box-sizing:border-box;font-weight:bolder;" contenteditable="false">Antes de Imprimir recuerda los arboles!</strong>
+                            </t>
+                            <t t-elif="line.display_type == 'line_note'" style="box-sizing:border-box;" data-oe-t-selectable="true" data-oe-t-group="5" data-oe-t-inline="true">
+                                <i t-out="line.name or ''" style="box-sizing:border-box;" contenteditable="false">Antes de Imprimir recuerda los arboles!</i>
+                            </t>
+                        </td>
+                    </tr>
+                </tbody></table>
+            </t>
+            <t t-elif="(not hasattr(line, 'is_delivery') or not line.is_delivery)" style="box-sizing:border-box;" data-oe-t-selectable="true" data-oe-t-group="4">
+                <t t-set="loop_cycle_number" t-value="0" data-oe-t-inline="true" style="box-sizing:border-box;"></t><t t-set="loop_cycle_number" t-value="loop_cycle_number + 1" data-oe-t-inline="true" style="box-sizing:border-box;"></t><table width="100%" style="box-sizing:border-box;color: #454748; font-size: 12px; border-collapse: collapse;">
+                    
+                    <tbody style="box-sizing:border-box;"><tr t-att-style="'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'" style="box-sizing:border-box;">
+                        
+                        <td style="box-sizing:border-box;width: 150px;" width="150px">
+                            <img t-attf-src="/web/image/product.product/{{ line.product_id.id }}/image_128" style="border-style:none;box-sizing:border-box;vertical-align:middle;width: 64px; height: 64px; object-fit: contain;" alt="Product image" width="64" height="64">
+                        </td>
+                        <td align="left" t-out="line.product_id.name or ''" style="box-sizing:border-box;" contenteditable="false">	Antes de Imprimir recuerda los arboles!</td>
+                        <td width="15%" align="center" t-out="line.product_uom_qty or ''" style="box-sizing:border-box;" contenteditable="false">1</td>
+                        <td width="20%" align="right" style="box-sizing:border-box;"><strong style="box-sizing:border-box;font-weight:bolder;">
+                        <t t-if="object.user_id.has_group('account.group_show_line_subtotals_tax_excluded')" data-oe-t-group-active="true" style="box-sizing:border-box;" data-oe-t-group="6" data-oe-t-selectable="true" data-oe-t-inline="true">
+                            <t t-out="format_amount(line.price_reduce_taxexcl, object.currency_id) or ''" data-oe-t-inline="true" style="box-sizing:border-box;" contenteditable="false">$ 10.00</t>
+                        </t>
+                        <t t-else="" style="box-sizing:border-box;" data-oe-t-selectable="true" data-oe-t-group="6" data-oe-t-inline="true">
+                            <t t-out="format_amount(line.price_reduce_taxinc, object.currency_id) or ''" data-oe-t-inline="true" style="box-sizing:border-box;" contenteditable="false">$ 10.00</t>
+                        </t>
+                        </strong></td>
+                    </tr>
+                </tbody></table>
+            </t>
+        </t>
+    </div>
+    <div style="box-sizing:border-box;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;margin: 0px; padding: 0px;" t-if="hasattr(object, 'carrier_id') and object.carrier_id" data-oe-t-group-active="true" data-oe-t-group="7" data-oe-t-selectable="true">
+        <table width="100%" style="box-sizing:border-box;border-collapse:collapse;color: #454748; font-size: 12px; border-spacing: 0px 4px;" align="right">
+            <tbody style="box-sizing:border-box;"><tr style="box-sizing:border-box;">
+                <td style="box-sizing:border-box;width: 60%" width="635.406px">&nbsp;</td>
+                <td style="border-style:solid none none none;box-sizing:border-box;border-top-color:#dee2e6;border-top-width:1px;width: 30%; border-top: 1px solid #dee2e6;" align="right" width="317.688px"><strong style="box-sizing:border-box;font-weight:bolder;">Entregado:</strong></td>
+                <td style="border-style:solid none none none;box-sizing:border-box;border-top-color:#dee2e6;border-top-width:1px;width: 10%; border-top: 1px solid #dee2e6;" align="right" t-out="format_amount(object.amount_delivery, object.currency_id) or ''" width="105.906px" contenteditable="false">$ 0.00</td>
+            </tr>
+            <tr style="box-sizing:border-box;">
+                <td style="box-sizing:border-box;width: 60%" width="635.406px">&nbsp;</td>
+                <td style="box-sizing:border-box;width: 30%;" align="right" width="317.688px"><strong style="box-sizing:border-box;font-weight:bolder;">SubTotal:</strong></td>
+                <td style="box-sizing:border-box;width: 10%;" align="right" t-out="format_amount(object.amount_untaxed, object.currency_id) or ''" width="105.906px" contenteditable="false">$ 10.00</td>
+            </tr>
+        </tbody></table>
+    </div>
+    <div style="box-sizing:border-box;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;margin: 0px; padding: 0px;" t-else="" data-oe-t-selectable="true" data-oe-t-group="7">
+        <table width="100%" style="box-sizing:border-box;border-collapse:collapse;color: #454748; font-size: 12px; border-spacing: 0px 4px;" align="right">
+            <tbody style="box-sizing:border-box;"><tr style="box-sizing:border-box;">
+                <td style="box-sizing:border-box;width: 60%" width="635.406px">&nbsp;</td>
+                <td style="border-style:solid none none none;box-sizing:border-box;border-top-color:#dee2e6;border-top-width:1px;width: 30%; border-top: 1px solid #dee2e6;" align="right" width="317.688px"><strong style="box-sizing:border-box;font-weight:bolder;">SubTotal:</strong></td>
+                <td style="border-style:solid none none none;box-sizing:border-box;border-top-color:#dee2e6;border-top-width:1px;width: 10%; border-top: 1px solid #dee2e6;" align="right" t-out="format_amount(object.amount_untaxed, object.currency_id) or ''" width="105.906px" contenteditable="false">$ 10.00</td>
+            </tr>
+        </tbody></table>
+    </div>
+    <div style="box-sizing:border-box;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;margin: 0px; padding: 0px;">
+        <table width="100%" style="box-sizing:border-box;border-collapse:collapse;color: #454748; font-size: 12px; border-spacing: 0px 4px;" align="right">
+            <tbody style="box-sizing:border-box;"><tr style="box-sizing:border-box;">
+                <td style="box-sizing:border-box;width: 60%" width="635.406px">&nbsp;</td>
+                <td style="box-sizing:border-box;width: 30%;" align="right" width="317.688px"><strong style="box-sizing:border-box;font-weight:bolder;">Taxes:</strong></td>
+                <td style="box-sizing:border-box;width: 10%;" align="right" t-out="format_amount(object.amount_tax, object.currency_id) or ''" width="105.906px" contenteditable="false">$ 0.00</td>
+            </tr>
+            <tr style="box-sizing:border-box;">
+                <td style="box-sizing:border-box;width: 60%" width="635.406px">&nbsp;</td>
+                <td style="border-style:solid none none none;box-sizing:border-box;border-top-color:#dee2e6;border-top-width:1px;width: 30%; border-top: 1px solid #dee2e6;" align="right" width="317.688px"><strong style="box-sizing:border-box;font-weight:bolder;">Total:</strong></td>
+                <td style="border-style:solid none none none;box-sizing:border-box;border-top-color:#dee2e6;border-top-width:1px;width: 10%; border-top: 1px solid #dee2e6;" align="right" t-out="format_amount(object.amount_total, object.currency_id) or ''" width="105.906px" contenteditable="false">$ 10.00</td>
+            </tr>
+        </tbody></table>
+    </div>
+    <div t-if="object.partner_invoice_id" style="box-sizing:border-box;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;margin: 0px; padding: 0px;" data-oe-t-group-active="true" data-oe-t-group="8">
+        <table width="100%" style="box-sizing:border-box;border-collapse:collapse;color: #454748; font-size: 12px;">
+            <tbody style="box-sizing:border-box;"><tr style="box-sizing:border-box;">
+                <td style="box-sizing:border-box;padding-top: 10px;">
+                    <strong style="box-sizing:border-box;font-weight:bolder;">Enviar factura a:</strong>
+                    <t t-out="object.partner_invoice_id.street or ''" data-oe-t-inline="true" style="box-sizing:border-box;" contenteditable="false">1201 S Figueroa St</t>
+                    <t t-out="object.partner_invoice_id.city or ''" data-oe-t-inline="true" style="box-sizing:border-box;" contenteditable="false">Los Angeles</t>
+                    <t t-out="object.partner_invoice_id.state_id.name or ''" data-oe-t-inline="true" style="box-sizing:border-box;" contenteditable="false">California</t>
+                    <t t-out="object.partner_invoice_id.zip or ''" data-oe-t-inline="true" style="box-sizing:border-box;" contenteditable="false">90015</t>
+                    <t t-out="object.partner_invoice_id.country_id.name or ''" data-oe-t-inline="true" style="box-sizing:border-box;" contenteditable="false">United States</t>
+                </td>
+            </tr>
+            <tr style="box-sizing:border-box;">
+                <td style="box-sizing:border-box;">
+                    <strong style="box-sizing:border-box;font-weight:bolder;">Método de pago:</strong>
+                    <t t-if="transaction.token_id" data-oe-t-group-active="true" style="box-sizing:border-box;" data-oe-t-group="9" data-oe-t-selectable="true" data-oe-t-inline="true">
+                        <t t-out="transaction.token_id.name or ''" data-oe-t-inline="true" style="box-sizing:border-box;" contenteditable="false"></t>
+                    </t>
+                    <t t-else="" style="box-sizing:border-box;" data-oe-t-selectable="true" data-oe-t-group="9" data-oe-t-inline="true">
+                        <t t-out="transaction.acquirer_id.sudo().name or ''" data-oe-t-inline="true" style="box-sizing:border-box;" contenteditable="false"></t>
+                    </t>
+                    (<t t-out="format_amount(transaction.amount, object.currency_id) or ''" data-oe-t-inline="true" style="box-sizing:border-box;" contenteditable="false">$ 10.00</t>)
+                </td>
+            </tr>
+        </tbody></table>
+    </div>
+    <div t-if="object.partner_shipping_id and not object.only_services" style="box-sizing:border-box;font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;margin: 0px; padding: 0px;" data-oe-t-group-active="true" data-oe-t-group="10">
+        <table width="100%" style="box-sizing:border-box;border-collapse:collapse;color: #454748; font-size: 12px;">
+            <tbody style="box-sizing:border-box;"><tr style="box-sizing:border-box;">
+                <td style="box-sizing:border-box;">
+                    <br style="box-sizing:border-box;">
+                    <strong style="box-sizing:border-box;font-weight:bolder;">Enviar Productos a:</strong>
+                    <t t-out="object.partner_shipping_id.street or ''" data-oe-t-inline="true" style="box-sizing:border-box;" contenteditable="false">1201 S Figueroa St</t>
+                    <t t-out="object.partner_shipping_id.city or ''" data-oe-t-inline="true" style="box-sizing:border-box;" contenteditable="false">Los Angeles</t>
+                    <t t-out="object.partner_shipping_id.state_id.name or ''" data-oe-t-inline="true" style="box-sizing:border-box;" contenteditable="false">California</t>
+                    <t t-out="object.partner_shipping_id.zip or ''" data-oe-t-inline="true" style="box-sizing:border-box;" contenteditable="false">90015</t>
+                    <t t-out="object.partner_shipping_id.country_id.name or ''" data-oe-t-inline="true" style="box-sizing:border-box;" contenteditable="false">United States</t>
+                </td>
+            </tr>
+        </tbody></table>
+        <table t-if="hasattr(object, 'carrier_id') and object.carrier_id" width="100%" style="box-sizing:border-box;border-collapse:collapse;color: #454748; font-size: 12px;" data-oe-t-group-active="true" data-oe-t-group="11">
+            <tbody style="box-sizing:border-box;"><tr style="box-sizing:border-box;">
+                <td style="box-sizing:border-box;">
+                    <strong style="box-sizing:border-box;font-weight:bolder;">Método de envió:</strong>
+                    <t t-out="object.carrier_id.name or ''" data-oe-t-inline="true" style="box-sizing:border-box;" contenteditable="false"></t>
+                    <t t-if="object.carrier_id.fixed_price == 0.0" data-oe-t-group-active="true" style="box-sizing:border-box;" data-oe-t-group="12" data-oe-t-selectable="true" data-oe-t-inline="true">
+                        (Free)
+                    </t>
+                    <t t-else="" style="box-sizing:border-box;" data-oe-t-selectable="true" data-oe-t-group="12" data-oe-t-inline="true">
+                        (<t t-out="format_amount(object.carrier_id.fixed_price, object.currency_id) or ''" data-oe-t-inline="true" style="box-sizing:border-box;" contenteditable="false">$ 10.00</t>)
+                    </t>
+                </td>
+            </tr>
+        </tbody></table>
+    </div>
+</t>
+</div>
